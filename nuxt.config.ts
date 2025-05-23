@@ -7,7 +7,10 @@ export default defineNuxtConfig({
   ],
 
   build: {
-    transpile: ['vuetify'],
+    transpile: [
+      'vuetify',
+      '@arcgis/core'
+    ],
   },
 
   modules: [

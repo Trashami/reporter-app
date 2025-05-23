@@ -1,7 +1,15 @@
 import { defineStore } from 'pinia'
 
+interface UserState {
+  name: string
+  email: string
+  photo: string
+  token: string
+  isAuthenticated: boolean
+}
+
 export const useUserStore = defineStore('user', {
-  state: () => ({
+  state: (): UserState => ({
     name: '',
     email: '',
     photo: '',
@@ -9,10 +17,10 @@ export const useUserStore = defineStore('user', {
     isAuthenticated: false
   }),
   actions: {
-    login(user: any) {
-      this.name = user.name
-      this.email = user.email
-      this.photo = user.photo
+    login(user: Partial<UserState> & { token: string }) {
+      this.name = user.name || ''
+      this.email = user.email || ''
+      this.photo = user.photo || ''
       this.token = user.token
       this.isAuthenticated = true
     },
@@ -24,5 +32,5 @@ export const useUserStore = defineStore('user', {
       this.isAuthenticated = false
     }
   },
-  persist: true  
+  persist: true
 })

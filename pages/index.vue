@@ -1,5 +1,5 @@
 <script setup>
 definePageMeta({
-  redirect: '/road-hazard'
+  redirect: '/form'
 })
 </script>
