@@ -19,6 +19,19 @@
     "type": "Road Hazard",
     "submittedBy": "richard.lee@example.com",
     "date": "2025-05-14"
+  },
+  {
+    "id": 4,
+    "name": "Test 3",
+    "type": "Crack",
+    "submittedBy": "anonymous@example.com",
+    "date": "2025-10-09"
+  },
+  {
+    "id": 5,
+    "name": "Somewhere",
+    "type": "Sinkhole",
+    "submittedBy": "anonymous@example.com",
+    "date": "2025-10-09"
   }
 ]
-

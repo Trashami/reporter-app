@@ -6,7 +6,7 @@
             <v-btn to="/form" nuxt exact :ripple="false" variant="text" elevation="0" rounded="0"
               class="text-subtitle-2 font-weight-medium text-[#124216] px-4"
               style="min-height: 40px; border-radius: 0 !important;" exact-active-class="active-tab">
-              Road Hazards
+              Form Submission
             </v-btn>
           </v-col>
 
@@ -14,14 +14,14 @@
             <v-btn to="/admin" nuxt exact :ripple="false" variant="text" elevation="0" rounded="1"
               class="text-subtitle-2 font-weight-medium text-[#124216] px-4"
               style="min-height: 40px; border-radius: 0 !important;" exact-active-class="active-tab">
-              Code Violations
+              Admin Table
             </v-btn>
           </v-col>
             <v-col cols="auto">
                 <v-btn to="/map" nuxt exact :ripple="false" variant="text" elevation="0" rounded="1"
                 class="text-subtitle-2 font-weight-medium text-[#124216] px-4"
                 style="min-height: 40px; border-radius: 0 !important;" exact-active-class="active-tab">
-                Maps
+                Map
                 </v-btn>
                 </v-col>
         </v-row>

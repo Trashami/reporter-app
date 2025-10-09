@@ -4,7 +4,7 @@
 
     <!-- Table -->
     <v-data-table :headers="headers" :items="items" item-value="id" class="elevation-2 rounded border"
-      :items-per-page="5" hide-default-footer @click:row="(_, row) => handleRowClick(row.item)" />
+      :items-per-page="5" @click:row="(_, row) => handleRowClick(row.item)" />
 
     <v-dialog v-model="showModal" max-width="600px">
       <v-card class="pa-4" style="border-radius: 0;">

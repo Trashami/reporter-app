@@ -5,7 +5,7 @@
     background-image: url('https://tc-web.widen.net/content/uzssta9red/jpeg/footer-image.jpeg');
     background-size: cover;
     background-position: center;
-    min-height: 400px;
+    min-height: 100px;
   ">
 
     <v-container class="position-relative">
