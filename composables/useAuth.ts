@@ -5,7 +5,18 @@ import { useUserStore } from '~/stores/user'
 
 export const useAuth = () => {
   const store = useUserStore()
-  const { name, email, photo, isAuthenticated } = storeToRefs(store)
+const { 
+  name, 
+  email, 
+  photo, 
+  isAuthenticated, 
+  jobTitle,
+  department,
+  officeLocation,
+  mobilePhone,
+  userPrincipalName
+} = storeToRefs(store)
+
 
   const router = useRouter()
 
@@ -24,6 +35,11 @@ export const useAuth = () => {
     email,
     photo,
     isAuthenticated,
-    logout
+    logout,
+    jobTitle,
+    department,
+    officeLocation,
+    mobilePhone,
+    userPrincipalName
   }
 }

@@ -6,6 +6,11 @@ interface UserState {
   photo: string
   token: string
   isAuthenticated: boolean
+  jobTitle: string
+  department: string
+  officeLocation: string
+  mobilePhone: string
+  userPrincipalName: string
 }
 
 export const useUserStore = defineStore('user', {
@@ -14,7 +19,12 @@ export const useUserStore = defineStore('user', {
     email: '',
     photo: '',
     token: '',
-    isAuthenticated: false
+    isAuthenticated: false,
+    jobTitle: '',
+    department: '',
+    officeLocation: '',
+    mobilePhone: '',
+    userPrincipalName: ''
   }),
   actions: {
     login(user: Partial<UserState> & { token: string }) {
@@ -23,13 +33,16 @@ export const useUserStore = defineStore('user', {
       this.photo = user.photo || ''
       this.token = user.token
       this.isAuthenticated = true
+
+      // new optional fields
+      this.jobTitle = user.jobTitle || ''
+      this.department = user.department || ''
+      this.officeLocation = user.officeLocation || ''
+      this.mobilePhone = user.mobilePhone || ''
+      this.userPrincipalName = user.userPrincipalName || ''
     },
     logout() {
-      this.name = ''
-      this.email = ''
-      this.photo = ''
-      this.token = ''
-      this.isAuthenticated = false
+      this.$reset()
     }
   },
   persist: true

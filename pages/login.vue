@@ -21,6 +21,15 @@ import { useRouter } from 'vue-router'
 const store = useUserStore()
 const router = useRouter()
 
+// helper to convert blob → base64
+const blobToBase64 = (blob) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onloadend = () => resolve(reader.result)
+    reader.readAsDataURL(blob)
+  })
+}
+
 const signIn = async () => {
   try {
     const msalInstance = await initMsalInstance()
@@ -29,6 +38,7 @@ const signIn = async () => {
       return
     }
 
+    // Microsoft login
     const result = await msalInstance.loginPopup(loginRequest)
     if (!result || !result.account || !result.accessToken) {
       console.warn('Login failed: Missing account or token')
@@ -37,27 +47,37 @@ const signIn = async () => {
 
     const token = result.accessToken
 
+    // Fetch user profile from Graph
     const userRes = await fetch('https://graph.microsoft.com/v1.0/me', {
       headers: { Authorization: `Bearer ${token}` }
     })
     const profile = await userRes.json()
 
-    const imageRes = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    const blob = await imageRes.blob()
+    // Fetch user photo from Graph
+    let photo = ''
+    try {
+      const imageRes = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (imageRes.ok) {
+        const blob = await imageRes.blob()
+        photo = await blobToBase64(blob)
+      }
+    } catch {
+      console.warn('No photo available for user')
+    }
 
-    const photo = await new Promise((resolve) => {
-      const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
-      reader.readAsDataURL(blob)
-    })
-
+    // Hydrate Pinia store
     const userData = {
       name: profile.displayName,
       email: profile.mail || profile.userPrincipalName,
       photo,
-      token
+      token,
+      jobTitle: profile.jobTitle || '',
+      department: profile.department || '',
+      officeLocation: profile.officeLocation || '',
+      mobilePhone: profile.mobilePhone || '',
+      userPrincipalName: profile.userPrincipalName || ''
     }
 
     store.login(userData)
@@ -66,9 +86,7 @@ const signIn = async () => {
     console.error('Login failed:', err)
   }
 }
-
 </script>
-
 
 <style scoped>
 .no-rounded {

@@ -13,7 +13,7 @@
           </v-col>
 
           <v-col cols="auto" class="d-flex align-center gap-2">
-            <!-- Authenticated User UI -->
+            <!-- Authenticated User -->
             <template v-if="isAuthenticated">
               <v-avatar size="32" class="me-2">
                 <v-img :src="photo" alt="Profile" />
@@ -26,7 +26,7 @@
                   </v-btn>
                 </template>
 
-                <v-card min-width="250" class="pa-4">
+                <v-card min-width="280" class="pa-4">
                   <v-row no-gutters class="mb-3">
                     <v-avatar size="64" class="me-3">
                       <v-img :src="photo" alt="Profile" />
@@ -34,23 +34,31 @@
                     <div class="d-flex flex-column justify-center">
                       <div class="font-weight-bold">{{ name }}</div>
                       <div class="text-caption text-grey">{{ email }}</div>
+                      <div class="text-caption">{{ jobTitle }}</div>
+                      <div class="text-caption text-grey">{{ department }}</div>
                     </div>
                   </v-row>
                   <v-divider class="my-2" />
+                  <div v-if="officeLocation || mobilePhone" class="text-caption mb-2">
+                    <div v-if="officeLocation">📍 {{ officeLocation }}</div>
+                    <div v-if="mobilePhone">📱 {{ mobilePhone }}</div>
+                  </div>
                   <v-btn @click="logout" block color="#124216" class="text-white no-rounded">Sign Out</v-btn>
                 </v-card>
               </v-menu>
             </template>
 
-            <!-- Login Button When User Is Not Authenticated -->
+            <!-- Not logged in -->
             <template v-else>
-              <v-btn to="/login" nuxt variant="text" elevation="0"
-                class="no-rounded no-hover text-white text-caption px-4" style="min-height: 50px;">Login</v-btn>
+              <v-btn @click="login" variant="text" elevation="0"
+                class="no-rounded no-hover text-white text-caption px-4"
+                style="min-height: 50px;">Login</v-btn>
             </template>
           </v-col>
         </v-row>
       </v-container>
     </v-app-bar>
+
     <!-- App (secondary) NavBar -->
     <AppNav />
   </div>
@@ -59,14 +67,18 @@
 <script setup>
 import AppNav from './AppNav.vue'
 import { useAuth } from '@/composables/useAuth'
-const { name, email, photo, isAuthenticated, logout } = useAuth()
+
+const { 
+  name, email, photo, isAuthenticated,
+  jobTitle, department, officeLocation, mobilePhone,
+  login, logout
+} = useAuth()
 </script>
 
 <style scoped>
 .no-rounded {
   border-radius: 0 !important;
 }
-
 .no-hover:hover {
   background-color: #124216 !important;
   box-shadow: none !important;
