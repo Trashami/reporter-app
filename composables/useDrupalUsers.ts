@@ -1,3 +1,4 @@
+// composables/useDrupalUsers.ts
 interface DrupalUser {
   id: string
   name: string
@@ -7,24 +8,22 @@ interface DrupalUser {
 
 export async function useDrupalUsers(): Promise<DrupalUser[]> {
   try {
-    const data = await $fetch<any>('/api/drupal-users')
+    const response = await $fetch('/api/drupal-users')
 
-    if (!data?.data) {
-      console.warn('No user data returned from Drupal.')
+    if (!response?.data) {
+      console.warn('No user data returned from Drupal API route.')
       return []
     }
 
-    return data.data.map((u: any) => ({
+    return response.data.map((u: any) => ({
       id: u.id,
       name: u.attributes.display_name || u.attributes.name,
-      email: u.attributes.mail,
+      email: u.attributes.mail || '',
       role:
-        u.relationships?.roles?.data
-          ?.map((r: any) => r.id)
-          .join(', ') || 'N/A',
+        u.relationships?.roles?.data?.map((r: any) => r.id).join(', ') || 'N/A',
     }))
-  } catch (err) {
-    console.error('Drupal user fetch failed:', err)
+  } catch (error) {
+    console.error('Failed to fetch Drupal users:', error)
     return []
   }
 }

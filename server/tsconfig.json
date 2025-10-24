@@ -2,12 +2,12 @@
   "extends": "../.nuxt/tsconfig.server.json",
   "compilerOptions": {
     "moduleResolution": "node",
-    "types": ["vite/client", "vue"],
+    "types": ["node", "vite/client", "vue"],
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"],
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.vue"]
+  "include": ["**/*.ts", "**/*.vue", "api/drupal-users.ts", "../composables/useDrupalUsers.ts"]
 }
