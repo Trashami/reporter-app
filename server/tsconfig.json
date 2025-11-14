@@ -9,5 +9,5 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.vue", "api/drupal-users.ts", "../composables/useDrupalUsers.ts"]
+  "include": ["**/*.ts", "**/*.vue", "../types/**/*.d.ts"]
 }
