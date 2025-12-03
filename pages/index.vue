@@ -1,5 +1,5 @@
-<script setup>
+<script setup lang="ts">
 definePageMeta({
-  redirect: '/form'
-})
+  redirect: "/form",
+});
 </script>

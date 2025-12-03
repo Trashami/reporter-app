@@ -12,80 +12,107 @@
   </v-container>
 </template>
 
-<script setup>
-import { initMsalInstance } from '@/auth/msalInstance'
-import { loginRequest } from '@/auth/authConfig'
-import { useUserStore } from '~/stores/user'
-import { useRouter } from 'vue-router'
+<script setup lang="ts">
+import { initMsalInstance } from "@/auth/msalInstance";
+import { loginRequest } from "@/auth/authConfig";
+import { useUserStore } from "~/stores/user";
+import { useRouter } from "vue-router";
 
-const store = useUserStore()
-const router = useRouter()
+const store = useUserStore();
+const router = useRouter();
 
-// helper to convert blob → base64
-const blobToBase64 = (blob) => {
-  return new Promise((resolve) => {
-    const reader = new FileReader()
-    reader.onloadend = () => resolve(reader.result)
-    reader.readAsDataURL(blob)
-  })
+interface GraphUserProfile {
+  displayName: string;
+  mail?: string | null;
+  userPrincipalName: string;
+  jobTitle?: string | null;
+  department?: string | null;
+  officeLocation?: string | null;
+  mobilePhone?: string | null;
 }
 
-const signIn = async () => {
+interface UserData {
+  name: string;
+  email: string;
+  photo: string;
+  token: string;
+  jobTitle: string;
+  department: string;
+  officeLocation: string;
+  mobilePhone: string;
+  userPrincipalName: string;
+}
+
+// helper to convert blob → base64
+const blobToBase64 = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = (e) => reject(e);
+    reader.readAsDataURL(blob);
+  });
+};
+
+const signIn = async (): Promise<void> => {
   try {
-    const msalInstance = await initMsalInstance()
+    const msalInstance = await initMsalInstance();
     if (!msalInstance) {
-      console.warn('MSAL not available')
-      return
+      console.warn("MSAL not available");
+      return;
     }
 
     // Microsoft login
-    const result = await msalInstance.loginPopup(loginRequest)
+    const result = await msalInstance.loginPopup(loginRequest);
     if (!result || !result.account || !result.accessToken) {
-      console.warn('Login failed: Missing account or token')
-      return
+      console.warn("Login failed: Missing account or token");
+      return;
     }
 
-    const token = result.accessToken
+    const token = result.accessToken;
 
     // Fetch user profile from Graph
-    const userRes = await fetch('https://graph.microsoft.com/v1.0/me', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    const profile = await userRes.json()
+    const userRes = await fetch("https://graph.microsoft.com/v1.0/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const profile = (await userRes.json()) as GraphUserProfile;
 
     // Fetch user photo from Graph
-    let photo = ''
+    let photo = "";
     try {
-      const imageRes = await fetch('https://graph.microsoft.com/v1.0/me/photo/$value', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      const imageRes = await fetch(
+        "https://graph.microsoft.com/v1.0/me/photo/$value",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (imageRes.ok) {
-        const blob = await imageRes.blob()
-        photo = await blobToBase64(blob)
+        const blob = await imageRes.blob();
+        photo = await blobToBase64(blob);
       }
     } catch {
-      console.warn('No photo available for user')
+      console.warn("No photo available for user");
     }
 
     // Hydrate Pinia store
-    const userData = {
+    const userData: UserData = {
       name: profile.displayName,
       email: profile.mail || profile.userPrincipalName,
       photo,
       token,
-      jobTitle: profile.jobTitle || '',
-      department: profile.department || '',
-      officeLocation: profile.officeLocation || '',
-      mobilePhone: profile.mobilePhone || '',
-      userPrincipalName: profile.userPrincipalName || ''
-    }
+      jobTitle: profile.jobTitle || "",
+      department: profile.department || "",
+      officeLocation: profile.officeLocation || "",
+      mobilePhone: profile.mobilePhone || "",
+      userPrincipalName: profile.userPrincipalName,
+    };
 
-    store.login(userData)
-    await router.push('/')
+    store.login(userData);
+    await router.push("/");
   } catch (err) {
-    console.error('Login failed:', err)
+    console.error("Login failed:", err);
   }
-}
+};
 </script>
 
 <style scoped>

@@ -17,6 +17,7 @@
     "axios": "^1.8.4",
     "nuxt": "^3.16.2",
     "pinia-plugin-persistedstate-2": "^2.0.30",
+    "undici": "^7.16.0",
     "vue": "^3.5.22",
     "vue-router": "^4.5.0"
   },

@@ -4,10 +4,10 @@
   </v-container>
 </template>
 
-<script setup>
-import AdminTable from '~/components/AdminTable.vue'
-import { useUserStore } from '~/stores/user'
+<script setup lang="ts">
+import AdminTable from "~/components/AdminTable.vue";
+import { useUserStore } from "~/stores/user";
 
-const store = useUserStore()
-const user = store.$state
+const store = useUserStore();
+const user = store.$state;
 </script>

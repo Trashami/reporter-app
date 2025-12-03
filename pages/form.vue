@@ -12,7 +12,7 @@
               v-model="form.condition"
               :items="['Pothole', 'Sinkhole', 'Crack', 'Other']"
               label="Hazard Type"
-              :rules="[v => !!v || 'Select a condition']"
+              :rules="[(v) => !!v || 'Select a condition']"
               required
               rounded="0"
             />
@@ -20,7 +20,7 @@
             <v-text-field
               v-model="form.location"
               label="Location"
-              :rules="[v => !!v || 'Location is required']"
+              :rules="[(v) => !!v || 'Location is required']"
               required
               rounded="0"
             />
@@ -51,7 +51,12 @@
             </v-btn>
           </v-form>
 
-          <v-alert v-if="responseMessage" type="success" class="mt-4" rounded="0">
+          <v-alert
+            v-if="responseMessage"
+            type="success"
+            class="mt-4"
+            rounded="0"
+          >
             {{ responseMessage }}
           </v-alert>
         </v-card>
@@ -60,35 +65,44 @@
   </v-container>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import axios from 'axios'
+<script setup lang="ts">
+import { ref } from "vue";
+import axios from "axios";
 
-const formValid = ref(false)
+interface ReportForm {
+  name: string;
+  location: string;
+  condition: string;
+  notes: string;
+  photo: File | null;
+}
 
-const form = ref({
-  name: '',
-  location: '',
-  condition: '',
-  notes: '',
+const formValid = ref(false);
+
+const form = ref<ReportForm>({
+  name: "",
+  location: "",
+  condition: "",
+  notes: "",
   photo: null,
-})
+});
 
-const responseMessage = ref('')
+const responseMessage = ref<string>("");
 
 const submitForm = async () => {
   const payload = {
     ...form.value,
-    photo: form.value.photo?.name || null,
-  }
+    // store just the file name in this payload
+    photo: form.value.photo?.name ?? null,
+  };
 
   try {
-    const res = await axios.post('/api/submit', payload)
-    responseMessage.value = 'Thank you! Your report has been submitted.'
-    console.log('Fake API response:', res.data)
+    const res = await axios.post("/api/submit", payload);
+    responseMessage.value = "Thank you! Your report has been submitted.";
+    console.log("Fake API response:", res.data);
   } catch (error) {
-    console.error('Submission failed:', error)
-    responseMessage.value = 'Submission failed. Please try again.'
+    console.error("Submission failed:", error);
+    responseMessage.value = "Submission failed. Please try again.";
   }
-}
+};
 </script>
